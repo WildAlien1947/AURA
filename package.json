@@ -1,0 +1,9 @@
+{
+  "name": "aura",
+  "version": "1.0.0",
+  "description": "AURA unblocked games site",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

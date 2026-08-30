@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURA | Proxy Browser</title>
+    <style>
+      :root {
+        --bg: #071a2e;
+        --bg-2: #0d2447;
+        --panel: rgba(8, 22, 40, 0.8);
+        --blue-1: #73d0ff;
+        --blue-2: #3aa3ff;
+        --blue-3: #116efb;
+        --white: #eaf7ff;
+        --muted: #a9c9e8;
+        --shadow: 0 20px 45px rgba(15, 54, 124, 0.35);
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        font-family: Inter, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top left, rgba(75, 140, 255, 0.22), transparent 25%), linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 42%, #0b1f3d 100%);
+        color: var(--white);
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        padding: 24px 18px 50px;
+      }
+
+      .page {
+        width: min(1280px, 100%);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: rgba(10, 29, 52, 0.7);
+        border: 1px solid rgba(115, 208, 255, 0.18);
+        border-radius: 18px;
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .brand-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--blue-2), var(--blue-3));
+        position: relative;
+        box-shadow: inset 0 0 18px rgba(255,255,255,0.2), 0 10px 25px rgba(17,110,251,0.45);
+      }
+
+      .brand-mark::before {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border-radius: 8px;
+        border: 2px solid rgba(255,255,255,0.9);
+        transform: rotate(45deg);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .nav a {
+        color: var(--muted);
+        text-decoration: none;
+      }
+
+      .nav a:hover { color: var(--white); }
+
+      .nav button {
+        border: none;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--blue-2), var(--blue-3));
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .browser-panel {
+        margin-top: 30px;
+        background: rgba(8, 17, 30, 0.8);
+        border: 1px solid rgba(115, 208, 255, 0.18);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+
+      .browser-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .browser-header .left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .status-pill {
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(117, 190, 255, 0.08);
+        border: 1px solid rgba(117,190,255,0.25);
+        color: var(--blue-1);
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .window-dots {
+        display: flex;
+        gap: 8px;
+      }
+
+      .window-dots span {
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        border-radius: 50%;
+      }
+
+      .window-dots span:nth-child(1) { background: #ff5a66; }
+      .window-dots span:nth-child(2) { background: #ffc14d; }
+      .window-dots span:nth-child(3) { background: #4cd964; }
+
+      .browser-wrap {
+        display: grid;
+        grid-template-columns: 1fr 170px;
+        gap: 12px;
+      }
+
+      .address-bar {
+        display: flex;
+        align-items: center;
+        background: rgba(15, 28, 45, 0.9);
+        border: 1px solid rgba(125,195,255,0.15);
+        border-radius: 14px;
+        padding: 10px 14px;
+        gap: 12px;
+      }
+
+      .address-key {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(117,190,255,0.12);
+        color: var(--blue-1);
+        font-weight: 800;
+      }
+
+      #siteUrl {
+        flex: 1;
+        border: none;
+        background: none;
+        color: var(--white);
+        font-size: 0.96rem;
+        outline: none;
+      }
+
+      .browser-btn {
+        border: none;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--blue-2), var(--blue-3));
+        color: white;
+        font-weight: 700;
+        padding: 12px 18px;
+        cursor: pointer;
+      }
+
+      .browser-btn.secondary {
+        background: rgba(117, 190, 255, 0.10);
+        border: 1px solid rgba(117, 190, 255, 0.2);
+        color: var(--white);
+      }
+
+      .browser-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+
+      .browser-status {
+        margin-top: 12px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: rgba(117, 190, 255, 0.08);
+        border: 1px solid rgba(117,190,255,0.18);
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .browser-frame {
+        margin-top: 16px;
+        height: 620px;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(115,208,255,0.18);
+        background: rgba(7, 16, 26, 0.85);
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: white;
+      }
+
+      @media (max-width: 640px) {
+        .nav {
+          display: none;
+        }
+
+        .browser-wrap {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand" aria-label="AURA home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>AURA</span>
+        </div>
+
+        <nav class="nav" aria-label="Main navigation">
+          <a href="/">Home</a>
+          <a href="/browser.html">Proxy Browser</a>
+          <a href="/#featured">Featured</a>
+          <button type="button" onclick="window.location.href='/'">Back home</button>
+        </nav>
+      </header>
+
+      <section class="panel browser-panel" id="browser">
+        <div class="browser-header">
+          <div class="left">
+            <div class="window-dots" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="status-pill">Proxy browser</div>
+          </div>
+          <span style="color: var(--muted); font-weight: 600;">Secure web access</span>
+        </div>
+
+        <div class="browser-wrap">
+          <div class="address-bar" aria-label="Address bar">
+            <span class="address-key">🔒</span>
+            <input id="siteUrl" type="text" value="https://unblocked-web.pages.dev/minecraft" aria-label="Website URL" />
+          </div>
+          <button id="loadSite" class="browser-btn" type="button">Open</button>
+        </div>
+
+        <div class="browser-actions">
+        <button id="backSite" class="browser-btn secondary" type="button">Back</button>
+        <button id="forwardSite" class="browser-btn secondary" type="button">Forward</button>
+        <button id="reloadSite" class="browser-btn secondary" type="button">Reload</button>
+        <button id="openDirect" class="browser-btn secondary" type="button">Open direct</button>
+        </div>
+
+        <div id="browserStatus" class="browser-status">Preview mode is active. Some protected sites work better in a direct tab.</div>
+
+        <div class="browser-frame">
+          <iframe id="proxyFrame" title="AURA proxy browser" src="/proxy?url=https%3A%2F%2Fexample.com"></iframe>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const siteInput = document.getElementById('siteUrl');
+      const proxyFrame = document.getElementById('proxyFrame');
+      const openButton = document.getElementById('loadSite');
+      const backButton = document.getElementById('backSite');
+      const forwardButton = document.getElementById('forwardSite');
+      const reloadButton = document.getElementById('reloadSite');
+      const openDirectButton = document.getElementById('openDirect');
+      const browserStatus = document.getElementById('browserStatus');
+      let currentUrl = 'https://example.com';
+
+      function normalizeUrl(rawText) {
+        const value = rawText.trim();
+        if (!value) return 'https://unblocked-web.pages.dev/minecraft';
+        if (/^https?:\/\//i.test(value)) return value;
+        return 'https://' + value;
+      }
+
+      function setStatus(message, isWarning = false) {
+        browserStatus.textContent = message;
+        browserStatus.style.background = isWarning ? 'rgba(255, 193, 77, 0.08)' : 'rgba(117, 190, 255, 0.08)';
+        browserStatus.style.borderColor = isWarning ? 'rgba(255, 193, 77, 0.30)' : 'rgba(117,190,255,0.18)';
+        browserStatus.style.color = isWarning ? '#ffd88f' : 'var(--muted)';
+      }
+
+      function openDirectSite(url) {
+        const normalized = normalizeUrl(url);
+        currentUrl = normalized;
+        siteInput.value = normalized;
+        setStatus('This site blocks embedded previews. Use the direct browser tab if you want to continue.', true);
+      }
+
+      function openProxyPage(url) {
+        const normalized = normalizeUrl(url);
+        currentUrl = normalized;
+        siteInput.value = normalized;
+        setStatus('Loading through the AURA proxy preview...', false);
+        proxyFrame.src = '/proxy?url=' + encodeURIComponent(normalized);
+      }
+
+      function navigateFrameHistory(method) {
+        proxyFrame.contentWindow.history[method]();
+        setStatus('Navigating...', false);
+      }
+
+      function checkProxyFailure() {
+        try {
+          const doc = proxyFrame.contentDocument;
+          if (!doc) return;
+          const text = doc.body ? doc.body.innerText || '' : '';
+          if (text.includes('Proxy blocked this site') || text.includes('could not be loaded in the preview')) {
+            setStatus('This site is blocked in the preview. Opening it directly in a browser tab now.', true);
+            setTimeout(() => {
+              window.open(currentUrl, '_blank', 'noopener,noreferrer');
+            }, 500);
+          }
+        } catch (error) {
+          // cross-origin or blocked content; ignore and fall back to direct open
+        }
+      }
+
+      proxyFrame.addEventListener('load', () => {
+        if (proxyFrame.src && proxyFrame.src.includes('/proxy?url=')) {
+          setTimeout(checkProxyFailure, 250);
+          setStatus('Proxy preview loaded. If the site is blocked, use the direct tab option.', false);
+        }
+      });
+
+      proxyFrame.addEventListener('error', () => {
+        setStatus('Preview failed. Use “Open direct” to launch the site in a real browser tab.', true);
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      const initialUrl = params.get('url');
+      if (initialUrl) {
+        openProxyPage(initialUrl);
+      } else {
+        openProxyPage('https://unblocked-web.pages.dev/minecraft');
+      }
+
+      openButton.addEventListener('click', () => {
+        openProxyPage(siteInput.value);
+      });
+
+      backButton.addEventListener('click', () => navigateFrameHistory('back'));
+      forwardButton.addEventListener('click', () => navigateFrameHistory('forward'));
+      reloadButton.addEventListener('click', () => {
+        proxyFrame.contentWindow.location.reload();
+        setStatus('Reloading preview...', false);
+      });
+
+      openDirectButton.addEventListener('click', () => {
+        const normalized = normalizeUrl(siteInput.value);
+        currentUrl = normalized;
+        setStatus('Opening this site in a real browser tab because the embed is blocked.', true);
+        window.open(normalized, '_blank', 'noopener,noreferrer');
+      });
+
+      siteInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          openProxyPage(siteInput.value);
+        }
+      });
+    </script>
+  </body>
+</html>

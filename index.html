@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURA | Unblocked Games</title>
+    <style>
+      :root {
+        --bg: #071a2e;
+        --bg-2: #0d2447;
+        --panel: rgba(8, 22, 40, 0.8);
+        --panel-strong: rgba(7, 18, 32, 0.95);
+        --blue-1: #73d0ff;
+        --blue-2: #3aa3ff;
+        --blue-3: #116efb;
+        --blue-4: #0a3d9c;
+        --white: #eaf7ff;
+        --muted: #a9c9e8;
+        --shadow: 0 20px 45px rgba(15, 54, 124, 0.35);
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        font-family: Inter, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(75, 140, 255, 0.22), transparent 25%),
+          linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 42%, #0b1f3d 100%);
+        color: var(--white);
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        padding: 24px 18px 48px;
+      }
+
+      .page {
+        width: min(1280px, 100%);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: rgba(10, 29, 52, 0.7);
+        border: 1px solid rgba(115, 208, 255, 0.18);
+        border-radius: 18px;
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .brand-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--blue-2), var(--blue-3), var(--blue-4));
+        position: relative;
+        box-shadow: inset 0 0 18px rgba(255,255,255,0.2), 0 10px 25px rgba(17,110,251,0.45);
+      }
+
+      .brand-mark::before {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border-radius: 8px;
+        border: 2px solid rgba(255,255,255,0.9);
+        transform: rotate(45deg);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .nav a {
+        color: var(--muted);
+        text-decoration: none;
+      }
+
+      .nav a:hover { color: var(--white); }
+
+      .nav button {
+        border: none;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--blue-2), var(--blue-3));
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 10px 22px rgba(59, 136, 255, 0.4);
+      }
+
+      .hero {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: 1.05fr 1.2fr;
+        gap: 24px;
+      }
+
+      .panel {
+        background: rgba(8, 17, 30, 0.7);
+        border: 1px solid rgba(115, 208, 255, 0.18);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero-copy {
+        padding: 38px 32px 30px;
+        min-height: 270px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 18px;
+        background: rgba(91, 167, 255, 0.1);
+        color: var(--blue-1);
+        border: 1px solid rgba(125, 195, 255, 0.2);
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.6rem, 3vw, 4.2rem);
+        line-height: 1;
+        letter-spacing: -0.05em;
+      }
+
+      .hero-copy p {
+        color: var(--muted);
+        font-size: 1.06rem;
+        line-height: 1.7;
+        margin: 18px 0 28px;
+        max-width: 55ch;
+      }
+
+      .cta-row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .primary-btn, .secondary-btn {
+        border-radius: 999px;
+        border: none;
+        padding: 14px 22px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .primary-btn {
+        background: linear-gradient(135deg, var(--blue-2), var(--blue-3));
+        color: white;
+        box-shadow: 0 16px 30px rgba(26, 95, 255, 0.35);
+      }
+
+      .secondary-btn {
+        background: rgba(117, 190, 255, 0.12);
+        color: var(--white);
+        border: 1px solid rgba(117, 190, 255, 0.2);
+      }
+
+      .primary-btn:hover, .secondary-btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      .stat {
+        background: rgba(18, 38, 61, 0.8);
+        border: 1px solid rgba(115, 208, 255, 0.12);
+        border-radius: 18px;
+        padding: 16px 18px;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 1.6rem;
+        letter-spacing: -0.04em;
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .hero-visual {
+        position: relative;
+        overflow: hidden;
+        padding: 18px;
+      }
+
+      .game-shell {
+        height: 100%;
+        min-height: 300px;
+        border-radius: 22px;
+        background:
+          linear-gradient(180deg, rgba(14, 49, 86, 0.9), rgba(9, 21, 36, 0.88)),
+          linear-gradient(135deg, rgba(117, 190, 255, 0.15), rgba(17, 110, 251, 0.02));
+        border: 1px solid rgba(125, 195, 255, 0.18);
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .mini-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+      }
+
+      .window-dots {
+        display: flex;
+        gap: 8px;
+      }
+
+      .window-dots span {
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        border-radius: 50%;
+      }
+
+      .window-dots span:nth-child(1) { background: #ff5a66; }
+      .window-dots span:nth-child(2) { background: #ffc14d; }
+      .window-dots span:nth-child(3) { background: #4cd964; }
+
+      .mini-screen {
+        flex: 1;
+        border-radius: 18px;
+        background:
+          linear-gradient(180deg, rgba(7, 26, 46, 0.08), rgba(7, 18, 32, 0.28)),
+          url("assets/neon-drift-preview.jpg") center / cover no-repeat;
+        border: 1px solid rgba(125, 195, 255, 0.15);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mini-screen::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(120deg, rgba(0,255,255,0.04), transparent 42%, rgba(73,101,255,0.08));
+      }
+
+      .game-card {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        background: rgba(9, 22, 38, 0.9);
+        border: 1px solid rgba(125, 195, 255, 0.18);
+        border-radius: 18px;
+        padding: 14px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1;
+      }
+
+      .game-card h3 {
+        margin: 0 0 4px;
+        font-size: 1.2rem;
+      }
+
+      .game-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .game-chip {
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(117, 190, 255, 0.12);
+        color: var(--blue-1);
+        border: 1px solid rgba(117, 190, 255, 0.2);
+        font-weight: 700;
+      }
+
+      main {
+        margin-top: 32px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: clamp(1.4rem, 2vw, 2.1rem);
+        letter-spacing: -0.05em;
+      }
+
+      .section-head span {
+        color: var(--muted);
+      }
+
+      .games-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .game-tile {
+        background: rgba(8, 17, 30, 0.8);
+        border: 1px solid rgba(115, 208, 255, 0.16);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .thumb {
+        position: relative;
+        height: 160px;
+        background: linear-gradient(135deg, rgba(27,84,164,0.9), rgba(10,61,156,0.9));
+        border-bottom: 1px solid rgba(125, 195, 255, 0.15);
+      }
+
+      .thumb::before {
+        content: "";
+        position: absolute;
+        inset: 24px 20px 18px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(92, 198, 255, 0.42), rgba(58, 82, 255, 0.22));
+        border: 1px solid rgba(255,255,255,0.18);
+      }
+
+      .thumb::after {
+        content: "";
+        position: absolute;
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        border: 4px solid rgba(255,255,255,0.85);
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 0 10px rgba(255,255,255,0.08);
+      }
+
+      .game-info {
+        padding: 18px 18px 20px;
+      }
+
+      .capsule-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+
+      .capsule {
+        border: 1px solid rgba(125, 195, 255, 0.18);
+        background: rgba(117,190,255,0.08);
+        color: var(--blue-1);
+        border-radius: 999px;
+        padding: 6px 9px;
+        font-size: 0.72rem;
+      }
+
+      .game-info h3 {
+        margin: 0 0 8px;
+        font-size: 1.15rem;
+      }
+
+      .game-info p {
+        margin: 0 0 18px;
+        color: var(--muted);
+        line-height: 1.6;
+        font-size: 0.9rem;
+      }
+
+      .game-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .rating {
+        color: var(--blue-1);
+        font-weight: 700;
+      }
+
+      .play-btn {
+        border: none;
+        background: linear-gradient(135deg, var(--blue-2), var(--blue-3));
+        color: white;
+        padding: 9px 14px;
+        border-radius: 999px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .fullscreen-btn {
+        border: 1px solid rgba(117, 190, 255, 0.25);
+        background: rgba(117, 190, 255, 0.1);
+        color: var(--white);
+        padding: 9px 14px;
+        border-radius: 999px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .warning-banner {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 16px 0 18px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 193, 77, 0.35);
+        background: rgba(255, 193, 77, 0.08);
+        color: #ffd88f;
+        font-size: 0.88rem;
+      }
+
+      .popup-notice {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: rgba(117, 190, 255, 0.08);
+        border: 1px solid rgba(117, 190, 255, 0.2);
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .warning-banner strong {
+        color: #fff0c7;
+      }
+
+      .browser-panel {
+        margin-top: 34px;
+        padding: 18px;
+      }
+
+      .browser-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .browser-header .left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .browser-header .status-pill {
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(117, 190, 255, 0.08);
+        border: 1px solid rgba(117,190,255,0.25);
+        color: var(--blue-1);
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .browser-wrap {
+        display: grid;
+        grid-template-columns: 1fr 170px;
+        gap: 12px;
+      }
+
+      .address-bar {
+        display: flex;
+        align-items: center;
+        background: rgba(15, 28, 45, 0.9);
+        border: 1px solid rgba(125,195,255,0.15);
+        border-radius: 14px;
+        padding: 10px 14px;
+        gap: 12px;
+      }
+
+      .address-key {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(117,190,255,0.12);
+        color: var(--blue-1);
+        font-weight: 800;
+      }
+
+      #siteUrl {
+        flex: 1;
+        border: none;
+        background: none;
+        color: var(--white);
+        font-size: 0.96rem;
+        outline: none;
+      }
+
+      #siteUrl::placeholder {
+        color: rgba(169, 201, 232, 0.7);
+      }
+
+      .browser-btn {
+        border: none;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--blue-2), var(--blue-3));
+        color: white;
+        font-weight: 700;
+        padding: 12px 18px;
+        cursor: pointer;
+      }
+
+      .browser-frame {
+        margin-top: 16px;
+        height: 540px;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(115,208,255,0.18);
+        background: rgba(7, 16, 26, 0.85);
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: white;
+      }
+
+      @media (max-width: 980px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .games-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 640px) {
+        .nav {
+          display: none;
+        }
+
+        .browser-wrap {
+          grid-template-columns: 1fr;
+        }
+
+        .games-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand" aria-label="AURA home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>AURA</span>
+        </div>
+
+        <nav class="nav" aria-label="Main navigation">
+          <a href="#featured">Featured</a>
+          <a href="/browser.html" onclick="openBrowser(event)">Proxy Browser</a>
+          <a href="#popular">Popular</a>
+          <button type="button" onclick="openBrowser()">Open Browser</button>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <div class="panel hero-copy">
+          <div class="eyebrow">Unblocked access • premium play</div>
+          <h1>Speed, style, and endless play.</h1>
+          <p>
+            Jump into AURA for fast, ad-light gaming with a built-in proxy browser built for exploration,
+            game discovery, and smooth browsing across the web without leaving your home base.
+          </p>
+
+          <div class="cta-row">
+            <button class="primary-btn" type="button" onclick="openBrowser()">Launch browser</button>
+            <button class="secondary-btn" type="button" onclick="document.getElementById('popular').scrollIntoView({ behavior: 'smooth', block: 'start' });">Explore games</button>
+          </div>
+
+          <div class="popup-notice" role="status">
+            AURA opens the browser in a new tab. If nothing opens, enable pop-ups and redirects for this site, then try again.
+          </div>
+
+          <div class="stats" aria-label="Site statistics">
+            <div class="stat">
+              <strong>2.4k+</strong>
+              <span>Players online</span>
+            </div>
+            <div class="stat">
+              <strong>140+</strong>
+              <span>Game titles</span>
+            </div>
+            <div class="stat">
+              <strong>99.9%</strong>
+              <span>Uptime</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel hero-visual">
+          <div class="game-shell">
+            <div class="mini-topbar">
+              <div class="window-dots" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <span style="color: var(--muted); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: .72rem;">AURA Arcade</span>
+            </div>
+            <div class="mini-screen" aria-label="Arcade preview"></div>
+            <div class="game-card">
+              <div>
+                <h3>Neon Drift</h3>
+                <p>High-speed race challenge</p>
+              </div>
+              <div class="game-chip">Play</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <main>
+        <div class="section-head" id="featured">
+          <h2>Featured games</h2>
+          <span>Fresh picks for today</span>
+        </div>
+
+        <div class="warning-banner">
+          <span>⚠️</span>
+          <span><strong>Roblox note:</strong> the now.gg client can be unstable on some devices or networks.</span>
+        </div>
+
+        <section class="games-grid" id="popular" aria-label="Recommended games">
+          <article class="game-tile">
+            <div class="thumb" aria-hidden="true"></div>
+            <div class="game-info">
+              <div class="capsule-row">
+                <span class="capsule">Arcade</span>
+                <span class="capsule">Games</span>
+              </div>
+              <h3>CrazyGames</h3>
+              <p>The ultimate destination for free online games!</p>
+              <div class="game-actions">
+                <span class="rating">★★★★☆</span>
+                <div>
+                  <button class="play-btn" type="button" data-url="https://www.crazygames.com">Play</button>
+                  <button class="fullscreen-btn" type="button" data-fullscreen-url="https://www.crazygames.com">Fullscreen</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="game-tile">
+            <div class="thumb" aria-hidden="true" style="background: linear-gradient(135deg, rgba(17,110,251,0.9), rgba(35, 213, 225, 0.9));"></div>
+            <div class="game-info">
+              <div class="capsule-row">
+                <span class="capsule">Games</span>
+                <span class="capsule">Hub</span>
+              </div>
+              <h3>FreezeNova</h3>
+              <p>Freeze the action in this thrilling game website!</p>
+              <div class="game-actions">
+                <span class="rating">★★★★★</span>
+                <div>
+                  <button class="play-btn" type="button" data-url="https://www.freezenova.com">Play</button>
+                  <button class="fullscreen-btn" type="button" data-fullscreen-url="https://www.freezenova.com">Fullscreen</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="game-tile">
+            <div class="thumb" aria-hidden="true" style="background: linear-gradient(135deg, rgba(9,92,190,0.9), rgba(91, 142, 255, 0.9));"></div>
+            <div class="game-info">
+              <div class="capsule-row">
+                <span class="capsule">Games</span>
+                <span class="capsule">Hub</span>
+              </div>
+              <h3>DuckMath</h3>
+              <p>Some real good games!</p>
+              <div class="game-actions">
+                <span class="rating">★★★★☆</span>
+                <div>
+                  <button class="play-btn" type="button" data-url="https://www.quizquack.com">Play</button>
+                  <button class="fullscreen-btn" type="button" data-fullscreen-url="https://www.quizquack.com">Fullscreen</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="game-tile">
+            <div class="thumb" aria-hidden="true" style="background: linear-gradient(135deg, rgba(17, 61, 125, 0.9), rgba(94, 193, 255, 0.9));"></div>
+            <div class="game-info">
+              <div class="capsule-row">
+                <span class="capsule">Games</span>
+                <span class="capsule">Hub</span>
+              </div>
+              <h3>HuiHub</h3>
+              <p>The new innovation of unblocked games!</p>
+              <div class="game-actions">
+                <span class="rating">★★★★★</span>
+                <div>
+                  <button class="play-btn" type="button" data-url="https://www.sites.google.com/philasd.org/huihub">Play</button>
+                  <button class="fullscreen-btn" type="button" data-fullscreen-url="https://www.sites.google.com/philasd.org/huihub">Fullscreen</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="game-tile">
+            <div class="thumb" aria-hidden="true" style="background: linear-gradient(135deg, rgba(17, 110, 251, 0.9), rgba(30, 163, 92, 0.8));"></div>
+            <div class="game-info">
+              <div class="capsule-row">
+                <span class="capsule">Sandbox</span>
+                <span class="capsule">Creative</span>
+              </div>
+              <h3>Minecraft</h3>
+              <p>Build, mine, and survive in blocky worlds with the unblocked browser client.</p>
+              <div class="game-actions">
+                <span class="rating">★★★★★</span>
+                <div>
+                  <button class="play-btn" type="button" data-url="https://unblocked-web.pages.dev/minecraft">Play</button>
+                  <button class="fullscreen-btn" type="button" data-fullscreen-url="https://unblocked-web.pages.dev/minecraft">Fullscreen</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="game-tile">
+            <div class="thumb" aria-hidden="true" style="background: linear-gradient(135deg, rgba(31, 114, 255, 0.9), rgba(82, 212, 255, 0.8));"></div>
+            <div class="game-info">
+              <div class="capsule-row">
+                <span class="capsule">Adventure</span>
+                <span class="capsule">Multiplayer</span>
+              </div>
+              <h3>Roblox and More!</h3>
+              <p>Jump into the now.gg client. Some users report lag or launch issues on specific devices.</p>
+              <div class="game-actions">
+                <span class="rating">★★★★★</span>
+                <div>
+                  <button class="play-btn" type="button" data-url="https://now.gg/apps/a/19900/b.html/">Play</button>
+                  <button class="fullscreen-btn" type="button" data-fullscreen-url="https://now.gg/apps/a/19900/b.html/">Fullscreen</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+      </main>
+    </div>
+
+    <script>
+      let browserTab = null;
+
+      function openBrowser(event, url) {
+        if (event) event.preventDefault();
+
+        const targetUrl = url
+          ? '/browser.html?url=' + encodeURIComponent(url)
+          : '/browser.html';
+        openInBlankFrame(targetUrl, true);
+      }
+
+      function openInBlankFrame(targetUrl, redirectCurrentTab = false) {
+        if (!browserTab || browserTab.closed) {
+          browserTab = window.open('about:blank', '_blank');
+        }
+
+        if (!browserTab) {
+          window.alert('AURA could not open a new safe tab. Please enable pop-ups and redirects for this site, then try again. If this page shows up as "about:blank", please disregard this message.');
+          if (redirectCurrentTab) {
+            window.location.href = 'https://www.google.com';
+          }
+          return;
+        }
+
+        browserTab.document.body.innerHTML = '';
+        browserTab.document.title = 'AURA | Proxy Browser';
+        browserTab.document.body.style.margin = '0';
+        browserTab.document.body.style.background = '#071a2e';
+        const frame = browserTab.document.createElement('iframe');
+        frame.src = targetUrl;
+        frame.title = 'AURA browser';
+        frame.style.width = '100vw';
+        frame.style.height = '100vh';
+        frame.style.border = '0';
+        browserTab.document.body.appendChild(frame);
+
+        if (redirectCurrentTab) {
+          window.location.href = 'https://www.google.com';
+        }
+      }
+
+      function openFullscreenProxy(url) {
+        const normalized = url || 'https://example.com';
+        openInBlankFrame('/proxy?url=' + encodeURIComponent(normalized));
+
+        if (browserTab && !browserTab.closed) {
+          const frame = browserTab.document.querySelector('iframe');
+          if (frame) {
+            frame.allowFullscreen = true;
+            browserTab.document.documentElement.requestFullscreen();
+          }
+        }
+      }
+
+      document.querySelectorAll('.play-btn').forEach((button) => {
+        button.addEventListener('click', () => {
+          const url = button.getAttribute('data-url') || 'https://example.com';
+          openBrowser(undefined, url);
+        });
+      });
+
+      document.querySelectorAll('.fullscreen-btn').forEach((button) => {
+        button.addEventListener('click', () => {
+          openFullscreenProxy(button.getAttribute('data-fullscreen-url'));
+        });
+      });
+
+      window.addEventListener('load', () => {
+        openInBlankFrame('/browser.html');
+      });
+    </script>
+  </body>
+</html>
