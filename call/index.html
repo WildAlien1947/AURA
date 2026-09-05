@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Private, peer-to-peer video calls." />
+    <title>Aura Call — private video chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+    <header class="topbar">
+      <a class="brand" href="/"><span class="brand-mark">✦</span><span>Aura <span class="brand-light">Call</span></span></a>
+      <div class="secure-pill"><span class="pulse"></span> End-to-end encrypted</div>
+    </header>
+
+    <main>
+      <section class="hero" id="landing">
+        <div class="eyebrow">PRIVATE BY DEFAULT <span>·</span> NO ACCOUNT NEEDED</div>
+        <h1>Talk freely.<br /><em>Stay private.</em></h1>
+        <p class="hero-copy">A quiet place for real conversations. Your call travels directly between you and your guest — never through our servers.</p>
+        <div class="join-card">
+          <div class="card-label">Start or join a room</div>
+          <div class="input-row">
+            <input id="room-input" maxlength="12" autocomplete="off" placeholder="Enter a room code" aria-label="Room code" />
+            <button class="primary-button" id="join-button">Enter room <span>→</span></button>
+          </div>
+          <button class="text-button" id="create-button">Create a new room <span>＋</span></button>
+        </div>
+        <div class="trust-row"><span>◉</span> No recordings <span>·</span> No tracking <span>·</span> No sign-up</div>
+      </section>
+
+      <section class="call-shell hidden" id="call">
+        <div class="call-header">
+          <div><div class="eyebrow">PRIVATE ROOM</div><div class="room-title"><span id="room-label">••••••••</span><button id="copy-button" title="Copy room link">Copy invite</button></div></div>
+          <div class="call-state"><span class="pulse"></span><span id="connection-label">Waiting for guest</span></div>
+        </div>
+        <div class="video-grid">
+          <div class="video-tile remote-tile"><video id="remote-video" autoplay playsinline></video><div class="empty-state" id="waiting-state"><div class="waiting-icon">✦</div><strong>Waiting for your guest</strong><span>Share your invite to begin</span></div><span class="tile-label">Guest</span></div>
+          <div class="video-tile local-tile"><video id="local-video" autoplay muted playsinline></video><span class="tile-label">You</span><span class="live-dot">LIVE</span></div>
+        </div>
+        <div class="controls">
+          <button class="control-button" id="mic-button"><span class="control-icon">♩</span><span>Mute</span></button>
+          <button class="control-button" id="camera-button"><span class="control-icon">▣</span><span>Camera</span></button>
+          <button class="control-button" id="share-button"><span class="control-icon">↥</span><span>Share screen</span></button>
+          <button class="control-button leave" id="leave-button"><span class="control-icon">×</span><span>Leave</span></button>
+        </div>
+        <div class="call-note"><span>⌁</span> This call is peer-to-peer and encrypted with WebRTC DTLS-SRTP.</div>
+      </section>
+    </main>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="/app.js"></script>
+  </body>
+</html>
