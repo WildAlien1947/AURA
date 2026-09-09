@@ -77,8 +77,16 @@ function rewriteProxyHtml(html, targetUrl) {
 }
 
 function resolvePath(requestPath) {
-  const safePath = requestPath === '/' ? '/index.html' : requestPath;
+  let safePath = requestPath === '/' ? '/index.html' : requestPath;
   const pathname = safePath.startsWith('/browser') ? '/browser.html' : safePath;
+
+  if (!path.extname(pathname)) {
+    const directoryIndexPath = path.join(rootDir, pathname.replace(/^\//, ''), 'index.html');
+    if (fs.existsSync(directoryIndexPath)) {
+      return directoryIndexPath;
+    }
+  }
+
   return path.join(rootDir, pathname.replace(/^\//, ''));
 }
 
