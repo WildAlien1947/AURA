@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "AURA unblocked games site",
   "main": "server.js",
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
   "scripts": {
     "start": "node server.js"
   }

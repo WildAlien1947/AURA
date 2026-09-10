@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { URL } = require('url');
+const { WebSocketServer } = require('ws');
 
 const rootDir = __dirname;
 const port = process.env.PORT || 3000;
@@ -77,10 +78,67 @@ function rewriteProxyHtml(html, targetUrl) {
 }
 
 function resolvePath(requestPath) {
-  const safePath = requestPath === '/' ? '/index.html' : requestPath;
+  const safePath = requestPath === '/' ? '/index.html' : requestPath === '/call' || requestPath === '/call/' ? '/call/index.html' : requestPath;
   const pathname = safePath.startsWith('/browser') ? '/browser.html' : safePath;
   return path.join(rootDir, pathname.replace(/^\//, ''));
 }
+
+const rooms = new Map();
+const webSocketServer = new WebSocketServer({ noServer: true });
+
+function sendMessage(socket, message) {
+  if (socket.readyState === socket.OPEN) socket.send(JSON.stringify(message));
+}
+
+webSocketServer.on('connection', (socket) => {
+  let room;
+
+  socket.on('message', (rawMessage) => {
+    let message;
+    try {
+      message = JSON.parse(rawMessage.toString());
+    } catch {
+      sendMessage(socket, { type: 'error', message: 'Invalid signaling message.' });
+      return;
+    }
+
+    if (message.type === 'join') {
+      const requestedRoom = typeof message.room === 'string' ? message.room.toUpperCase() : '';
+      if (!/^[A-Z0-9]{6,12}$/.test(requestedRoom)) {
+        sendMessage(socket, { type: 'error', message: 'Invalid room code.' });
+        return;
+      }
+
+      const clients = rooms.get(requestedRoom) || [];
+      if (clients.length >= 2) {
+        sendMessage(socket, { type: 'error', message: 'That room is full.' });
+        return;
+      }
+
+      room = requestedRoom;
+      clients.push(socket);
+      rooms.set(room, clients);
+      sendMessage(socket, { type: 'joined', initiator: clients.length === 1 });
+      if (clients.length === 2) clients.forEach((client) => sendMessage(client, { type: 'ready' }));
+      return;
+    }
+
+    if (!room) return;
+    const clients = rooms.get(room) || [];
+    clients.filter((client) => client !== socket).forEach((client) => sendMessage(client, message));
+  });
+
+  socket.on('close', () => {
+    if (!room) return;
+    const clients = (rooms.get(room) || []).filter((client) => client !== socket);
+    if (clients.length) {
+      rooms.set(room, clients);
+      sendMessage(clients[0], { type: 'peer-left' });
+    } else {
+      rooms.delete(room);
+    }
+  });
+});
 
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
@@ -123,4 +181,10 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(port, () => {
   console.log(`🚀 AURA server running at http://localhost:${port}`);
+});
+
+server.on('upgrade', (request, socket, head) => {
+  webSocketServer.handleUpgrade(request, socket, head, (client) => {
+    webSocketServer.emit('connection', client, request);
+  });
 });
