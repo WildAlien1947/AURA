@@ -284,17 +284,18 @@
           <button id="loadSite" class="browser-btn" type="button">Open</button>
         </div>
 
-        <div class="browser-actions">
-        <button id="backSite" class="browser-btn secondary" type="button">Back</button>
-        <button id="forwardSite" class="browser-btn secondary" type="button">Forward</button>
-        <button id="reloadSite" class="browser-btn secondary" type="button">Reload</button>
+        <div class="browser-actions" aria-label="Browser controls">
+        <button id="backSite" class="browser-btn secondary" type="button" title="Go back (Alt+Left)">Back</button>
+        <button id="forwardSite" class="browser-btn secondary" type="button" title="Go forward (Alt+Right)">Forward</button>
+        <button id="reloadSite" class="browser-btn secondary" type="button" title="Reload (Cmd/Ctrl+R)">Reload</button>
+        <button id="homeSite" class="browser-btn secondary" type="button">Home</button>
         <button id="openDirect" class="browser-btn secondary" type="button">Open direct</button>
         </div>
 
         <div id="browserStatus" class="browser-status">Preview mode is active. Some protected sites work better in a direct tab.</div>
 
         <div class="browser-frame">
-          <iframe id="proxyFrame" title="AURA proxy browser" src="/proxy?url=https%3A%2F%2Fexample.com"></iframe>
+          <iframe id="proxyFrame" title="AURA proxy browser" allow="autoplay; fullscreen; clipboard-read; clipboard-write; gamepad; microphone; camera; display-capture" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
       </section>
     </div>
@@ -307,8 +308,11 @@
       const forwardButton = document.getElementById('forwardSite');
       const reloadButton = document.getElementById('reloadSite');
       const openDirectButton = document.getElementById('openDirect');
+      const homeButton = document.getElementById('homeSite');
       const browserStatus = document.getElementById('browserStatus');
-      let currentUrl = 'https://example.com';
+      const homeUrl = 'https://unblocked-web.pages.dev/minecraft';
+      let currentUrl = homeUrl;
+      let loading = false;
 
       function normalizeUrl(rawText) {
         const value = rawText.trim();
@@ -328,20 +332,39 @@
         const normalized = normalizeUrl(url);
         currentUrl = normalized;
         siteInput.value = normalized;
-        setStatus('This site blocks embedded previews. Use the direct browser tab if you want to continue.', true);
+        setStatus('Opening the real site in a new browser tab. This is required for protected clients such as now.gg.', true);
+        window.open(normalized, '_blank', 'noopener,noreferrer');
       }
 
       function openProxyPage(url) {
         const normalized = normalizeUrl(url);
         currentUrl = normalized;
         siteInput.value = normalized;
+        loading = true;
         setStatus('Loading through the AURA proxy preview...', false);
         proxyFrame.src = '/proxy?url=' + encodeURIComponent(normalized);
       }
 
       function navigateFrameHistory(method) {
-        proxyFrame.contentWindow.history[method]();
-        setStatus('Navigating...', false);
+        try {
+          proxyFrame.contentWindow.history[method]();
+          setStatus('Navigating...', false);
+        } catch {
+          setStatus('Navigation is unavailable for this page. Enter a URL to continue.', true);
+        }
+      }
+
+      function syncAddress() {
+        try {
+          const frameUrl = proxyFrame.contentWindow.location.href;
+          const match = frameUrl.match(/[?&]url=([^&]+)/);
+          if (match) {
+            currentUrl = decodeURIComponent(match[1]);
+            siteInput.value = currentUrl;
+          }
+        } catch {
+          // The frame is normally same-origin; protected pages may opt out.
+        }
       }
 
       function checkProxyFailure() {
@@ -361,10 +384,10 @@
       }
 
       proxyFrame.addEventListener('load', () => {
-        if (proxyFrame.src && proxyFrame.src.includes('/proxy?url=')) {
-          setTimeout(checkProxyFailure, 250);
-          setStatus('Proxy preview loaded. If the site is blocked, use the direct tab option.', false);
-        }
+        loading = false;
+        syncAddress();
+        setTimeout(checkProxyFailure, 250);
+        setStatus('Page loaded. Forms, links, redirects, cookies, and styles stay inside the proxy when supported.', false);
       });
 
       proxyFrame.addEventListener('error', () => {
@@ -386,21 +409,35 @@
       backButton.addEventListener('click', () => navigateFrameHistory('back'));
       forwardButton.addEventListener('click', () => navigateFrameHistory('forward'));
       reloadButton.addEventListener('click', () => {
-        proxyFrame.contentWindow.location.reload();
+        try { proxyFrame.contentWindow.location.reload(); } catch { proxyFrame.src = proxyFrame.src; }
         setStatus('Reloading preview...', false);
       });
+      homeButton.addEventListener('click', () => openProxyPage(homeUrl));
 
       openDirectButton.addEventListener('click', () => {
         const normalized = normalizeUrl(siteInput.value);
         currentUrl = normalized;
-        setStatus('Opening this site in a real browser tab because the embed is blocked.', true);
-        window.open(normalized, '_blank', 'noopener,noreferrer');
+        openDirectSite(normalized);
       });
 
       siteInput.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
           openProxyPage(siteInput.value);
         }
+      });
+
+      window.addEventListener('keydown', (event) => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'l') {
+          event.preventDefault();
+          siteInput.focus();
+          siteInput.select();
+        }
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'r') {
+          event.preventDefault();
+          reloadButton.click();
+        }
+        if (event.altKey && event.key === 'ArrowLeft') navigateFrameHistory('back');
+        if (event.altKey && event.key === 'ArrowRight') navigateFrameHistory('forward');
       });
     </script>
   </body>
